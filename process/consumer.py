@@ -1,18 +1,32 @@
 from kafka import KafkaConsumer
+from kafka.errors import NoBrokersAvailable
 import json
+import time
 import NLP
 
 KAFKA_TOPIC = "movielens"
 KAFKA_BOOTSTRAP_SERVER = "kafka:9092"
-MAX_BUFFER_SIZE = 10
+MAX_BUFFER_SIZE = 15 # should be increased
+MAX_CONNECTION_ATTEMPTS = 20
 
-consumer = KafkaConsumer(
-    KAFKA_TOPIC,
-    bootstrap_servers=KAFKA_BOOTSTRAP_SERVER,
-    auto_offset_reset="earliest",  # Start reading at the earliest message
-    enable_auto_commit=True,  # Commit offsets automatically
-    value_deserializer=lambda x: json.loads(x.decode("utf-8")),
-)
+
+for i in range(MAX_CONNECTION_ATTEMPTS):
+    try:
+        print("Connecting to Kafka...")
+        consumer = KafkaConsumer(
+            KAFKA_TOPIC,
+            bootstrap_servers=KAFKA_BOOTSTRAP_SERVER,
+            auto_offset_reset="earliest",  # Start reading at the earliest message
+            enable_auto_commit=True,       # Commit offsets automatically
+            value_deserializer=lambda x: json.loads(x.decode("utf-8")),
+        )
+        print("Connected to Kafka")
+        break
+    except NoBrokersAvailable:
+        print("No brokers available. Retrying...")
+        time.sleep(5)
+        continue
+
 
 model = NLP.load_model("Model.keras")
 model.save("/shared_volume/Model.keras")
