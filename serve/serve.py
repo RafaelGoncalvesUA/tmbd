@@ -4,8 +4,10 @@ import sklearn
 from rating import default_user, predict_rating_for_user
 import pandas as pd
 from flask import Flask, request, jsonify
+import os
 
 app = Flask(__name__)
+
 
 @app.route("/predict", methods=["POST"])
 def predict():
@@ -25,7 +27,12 @@ def predict():
 
     return jsonify({"categories": categories, "rating": rating})
 
-app.run(port=5000)
+
+app.run(
+    host=os.getenv("FLASK_HOST", "127.0.0.1"),
+    port=5000,
+    debug=True,
+)
 
 """
 COMMAND TO TEST THE API:

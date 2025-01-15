@@ -29,6 +29,8 @@ services:
   producer:
     build:
       context: ./produce
+    environment:
+      - PYTHONUNBUFFERED=1
     depends_on:
       - kafka
 
@@ -36,16 +38,21 @@ services:
     build:
       context: .
       dockerfile: ./process/Dockerfile
+    environment:
+      - PYTHONUNBUFFERED=1
     depends_on:
       - kafka
       - producer
     volumes:
       - model_volume:/shared_volume
 
+  # Flask REST API
   serve:
     build:
       context: .
       dockerfile: ./serve/Dockerfile
+    environment:
+      - PYTHONUNBUFFERED=1
     ports:
       - "5000:5000"
     depends_on:
