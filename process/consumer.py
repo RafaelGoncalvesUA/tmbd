@@ -61,7 +61,7 @@ try:
             NLP.Train_Model(
                 X,
                 Y,
-                1000,
+                200,
                 Learning_Rate=0.00001,
                 Name="/shared_volume/Model",
                 Previous_Model=NLP.load_model("/shared_volume/Model.keras"),
