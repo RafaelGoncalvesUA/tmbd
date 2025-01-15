@@ -1,6 +1,6 @@
-FROM tensorflow/tensorflow:2.6.0-gpu
+FROM python:3.11-slim
 WORKDIR /app
-COPY . .
+COPY consumer.py .
 COPY model .
-RUN pip install kafka-python-ng pandas
+RUN pip install kafka-python-ng pandas tensorflow
 CMD ["python", "consumer.py"]
