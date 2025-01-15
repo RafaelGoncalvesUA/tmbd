@@ -29,7 +29,7 @@ def predict():
 
 
 app.run(
-    host=os.getenv("FLASK_HOST", "127.0.0.1"),
+    host="0.0.0.0",
     port=5000,
     debug=True,
 )
