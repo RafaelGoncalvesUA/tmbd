@@ -1,6 +1,6 @@
-FROM tensorflow/tensorflow:2.6.0-gpu
+FROM python:3.11-slim
 WORKDIR /app
 COPY serve.py .
 COPY model .
-RUN pip install flask torch pickle-mixin
+RUN pip install flask scikit-learn pandas tensorflow
 CMD ["python", "serve.py"]
